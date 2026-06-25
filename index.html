@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Attendant Duty Checklist</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Segoe UI", Arial, sans-serif; background: #f2f0ed; min-height: 100vh; padding: 40px 20px 60px; }
+
+    .wrap { max-width: 660px; margin: 0 auto; }
+
+    /* Top card */
+    .top-card {
+      background: #fff; border-radius: 12px; padding: 28px 32px; margin-bottom: 20px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.07); border: 1px solid #ece9e4;
+    }
+    .top-card h1 { font-size: 1.3rem; font-weight: 700; color: #1c1917; margin-bottom: 4px; }
+    .top-card p  { font-size: 0.82rem; color: #78716c; margin-bottom: 16px; }
+
+    .progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .progress-bar { flex: 1; height: 6px; background: #e7e5e4; border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; background: #1c1917; border-radius: 99px; transition: width .3s ease; }
+    .progress-label { font-size: 0.75rem; color: #a8a29e; white-space: nowrap; }
+
+    .filter-group { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+    .filter-group:last-child { margin-bottom: 0; }
+    .f-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: #a8a29e; align-self: center; margin-right: 4px; }
+    .f-btn {
+      padding: 5px 14px; border-radius: 6px; font-size: 0.76rem; font-weight: 500;
+      border: 1px solid #d6d3d1; background: #fff; color: #78716c; cursor: pointer;
+      transition: all .15s;
+    }
+    .f-btn:hover { border-color: #a8a29e; color: #1c1917; }
+    .f-btn.active { background: #1c1917; color: #fff; border-color: #1c1917; }
+
+    /* Sections */
+    .section {
+      background: #fff; border-radius: 12px; margin-bottom: 16px; overflow: hidden;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.07); border: 1px solid #ece9e4;
+    }
+    .section-head {
+      padding: 14px 20px; display: flex; align-items: center; gap: 12px;
+    }
+    .section-head.before          { background: #eff6ff; border-bottom: 1px solid #bfdbfe; }
+    .section-head.before-during-after { background: #f5f3ff; border-bottom: 1px solid #ddd6fe; }
+    .section-head.during          { background: #f0fdf4; border-bottom: 1px solid #bbf7d0; }
+    .section-head.after           { background: #fff7ed; border-bottom: 1px solid #fed7aa; }
+    .section-icon { font-size: 1.1rem; }
+    .section-name { font-size: 0.85rem; font-weight: 700; color: #1c1917; flex: 1; }
+    .section-count { font-size: 0.72rem; color: #a8a29e; }
+
+    /* Tasks */
+    .task {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 20px; border-top: 1px solid #f5f5f4; transition: background .15s;
+    }
+    .task:hover { background: #fafaf9; }
+    .task.done { opacity: 0.5; }
+    .task.done .task-title { text-decoration: line-through; color: #a8a29e; }
+
+    .task input[type="checkbox"] { width: 18px; height: 18px; accent-color: #1c1917; margin-top: 1px; flex-shrink: 0; cursor: pointer; }
+    .task-body { flex: 1; }
+    .task-title { font-size: 0.9rem; color: #292524; line-height: 1.5; }
+    .task-note {
+      font-size: 0.75rem; color: #92400e; background: #fef3c7;
+      padding: 5px 10px; border-radius: 5px; margin-top: 6px; border-left: 3px solid #f59e0b;
+    }
+    .task-extras { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+    .role-pill {
+      font-size: 0.65rem; font-weight: 600; padding: 2px 8px; border-radius: 99px;
+      background: #f5f5f4; color: #a8a29e;
+    }
+    .role-pill.entrance { background: #dbeafe; color: #1e40af; }
+    .diagram-btn {
+      font-size: 0.72rem; font-weight: 500; padding: 2px 10px; border-radius: 99px;
+      background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; cursor: pointer;
+    }
+    .diagram-btn:hover { background: #dcfce7; }
+
+    /* Footer */
+    .footer { display: flex; gap: 8px; margin-top: 8px; }
+    .footer-btn {
+      flex: 1; padding: 10px; border: 1px solid #d6d3d1; border-radius: 8px;
+      background: #fff; font-size: 0.82rem; color: #78716c; cursor: pointer; transition: all .15s;
+    }
+    .footer-btn:hover { border-color: #1c1917; color: #1c1917; }
+
+    /* Empty state */
+    .empty { padding: 24px 20px; text-align: center; font-size: 0.85rem; color: #a8a29e; }
+
+    /* Modal */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+      z-index: 100; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #fff; border-radius: 14px; padding: 24px; max-width: 500px; width: 100%;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.18); position: relative;
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .modal-header strong { font-size: 1rem; color: #1c1917; }
+    .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #a8a29e; line-height: 1; }
+    .modal-close:hover { color: #1c1917; }
+    .modal-content { overflow-x: auto; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Top card -->
+  <div class="top-card">
+    <h1>Attendant Duty Checklist</h1>
+    <p>Complete all tasks assigned to your role, in order, for each service.</p>
+
+    <div class="progress-row">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <span class="progress-label" id="progressLabel">0 / 0 done</span>
+    </div>
+
+    <div class="filter-group">
+      <span class="f-label">Role</span>
+      <button class="f-btn active" onclick="setRole('all')"        id="role-all">All Roles</button>
+      <button class="f-btn"        onclick="setRole('entrance')"   id="role-entrance">Entrance Attendant</button>
+      <button class="f-btn"        onclick="setRole('auditorium')" id="role-auditorium">Auditorium Attendant</button>
+    </div>
+    <div class="filter-group">
+      <span class="f-label">Phase</span>
+      <button class="f-btn active" onclick="setPhase('all')"    id="phase-all">All</button>
+      <button class="f-btn"        onclick="setPhase('before')" id="phase-before">Before</button>
+      <button class="f-btn"        onclick="setPhase('during')" id="phase-during">During</button>
+      <button class="f-btn"        onclick="setPhase('after')"  id="phase-after">After</button>
+    </div>
+  </div>
+
+  <!-- Checklist rendered here -->
+  <div id="list"></div>
+
+  <!-- Footer buttons -->
+  <div class="footer">
+    <button class="footer-btn" onclick="clearDone()">Clear completed</button>
+    <button class="footer-btn" onclick="clearAll()">Reset all</button>
+  </div>
+</div>
+
+<!-- Car park modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <strong>Car Park Layout</strong>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = "attendant-duty-v3";
+
+  const DUTIES = [
+    { text: "Arrive 20–30 minutes prior to duty",                                                                role: "both",     phase: "before" },
+    { text: "Open gate to the car park",                                                                         role: "both",     phase: "before" },
+    { text: "Unlock small walk-in gate padlock only, leave gate shut",                                           role: "both",     phase: "before" },
+    { text: "Open main door and use fob to switch off alarm",                                                    role: "both",     phase: "before" },
+    { text: "Turn on all the lights, open the emergency door and quickly check it is not blocked or obstructed", role: "both",     phase: "before" },
+    { text: "Make sure the car park is being used effectively",                                                  role: "both",     phase: "before",             diagram: "carpark" },
+    { text: "Monitor the entrance and those approaching it",                                                     role: "entrance", phase: "before-during-after" },
+    { text: "If you cannot be near the entrance, lock the door or have another qualified EA stand there — do not leave it unattended",
+             note: "Never use a door stopper as a substitute — door must be locked or actively monitored",       role: "entrance", phase: "before-during-after" },
+    { text: "Close the inner door five minutes after the start of the meeting",
+             note: "Outer doors must remain unlocked for emergencies",                                           role: "entrance", phase: "during" },
+  ];
+
+  const SECTION_META = {
+    "before":              { label: "Before the Meeting",      cls: "before" },
+    "before-during-after": { label: "Before, During & After", cls: "before-during-after" },
+    "during":              { label: "During the Meeting",      cls: "during" },
+    "after":               { label: "After the Meeting",       cls: "after" },
+  };
+
+  const DIAGRAMS = {
+    carpark: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 420 320">
+  <style>text{font-family:Arial,sans-serif;font-size:11px;fill:#444}.label{font-size:13px;font-weight:bold;fill:#222}</style>
+  <text class="label" x="90" y="16" text-anchor="middle">Option A</text>
+  <rect x="10" y="24" width="171" height="283" rx="4" fill="#f5f5f5" stroke="#222" stroke-width="1.5"/>
+  <rect x="117" y="24" width="63" height="283" fill="#dde8f0" stroke="#aaa" stroke-width="0.5"/>
+  <rect x="117" y="28"  width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="147" y="47"  text-anchor="middle">1</text>
+  <rect x="117" y="62"  width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="147" y="81"  text-anchor="middle">2</text>
+  <rect x="117" y="96"  width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="147" y="115" text-anchor="middle">3</text>
+  <rect x="117" y="130" width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="147" y="149" text-anchor="middle">4</text>
+  <rect x="117" y="164" width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="147" y="183" text-anchor="middle">5</text>
+  <rect x="117" y="198" width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="147" y="217" text-anchor="middle">6</text>
+  <rect x="117" y="232" width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="147" y="251" text-anchor="middle">7</text>
+  <rect x="117" y="266" width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="147" y="285" text-anchor="middle">8</text>
+  <rect x="14" y="28"  width="29" height="60" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="28"  y="62"  text-anchor="middle">9</text>
+  <rect x="48" y="28"  width="29" height="60" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="62"  y="62"  text-anchor="middle">10</text>
+  <rect x="82" y="28"  width="29" height="60" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="96"  y="62"  text-anchor="middle">11</text>
+  <rect x="14" y="93"  width="29" height="60" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="28"  y="127" text-anchor="middle">12</text>
+  <rect x="48" y="93"  width="29" height="60" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="62"  y="127" text-anchor="middle">13</text>
+  <rect x="82" y="93"  width="29" height="60" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="96"  y="127" text-anchor="middle">14</text>
+  <rect x="14" y="158" width="29" height="60" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="28"  y="192" text-anchor="middle">15</text>
+  <rect x="48" y="158" width="29" height="60" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="62"  y="192" text-anchor="middle">16</text>
+  <rect x="82" y="158" width="29" height="60" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="96"  y="192" text-anchor="middle">17</text>
+  <line x1="10" y1="254" x2="10" y2="307" stroke="#cc3333" stroke-width="3" stroke-linecap="round"/>
+  <text class="label" x="310" y="16" text-anchor="middle">Option B</text>
+  <rect x="220" y="24" width="171" height="283" rx="4" fill="#f5f5f5" stroke="#222" stroke-width="1.5"/>
+  <rect x="327" y="24" width="63" height="283" fill="#dde8f0" stroke="#aaa" stroke-width="0.5"/>
+  <rect x="327" y="28"  width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="357" y="47"  text-anchor="middle">1</text>
+  <rect x="327" y="62"  width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="357" y="81"  text-anchor="middle">2</text>
+  <rect x="327" y="96"  width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="357" y="115" text-anchor="middle">3</text>
+  <rect x="327" y="130" width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="357" y="149" text-anchor="middle">4</text>
+  <rect x="327" y="164" width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="357" y="183" text-anchor="middle">5</text>
+  <rect x="327" y="198" width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="357" y="217" text-anchor="middle">6</text>
+  <rect x="327" y="232" width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="357" y="251" text-anchor="middle">7</text>
+  <rect x="327" y="266" width="60" height="29" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="357" y="285" text-anchor="middle">8</text>
+  <rect x="224" y="28"  width="29" height="60" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="238" y="62"  text-anchor="middle">9</text>
+  <rect x="263" y="28"  width="29" height="60" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="277" y="62"  text-anchor="middle">10</text>
+  <rect x="224" y="93"  width="29" height="60" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="238" y="127" text-anchor="middle">11</text>
+  <rect x="263" y="93"  width="29" height="60" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="277" y="127" text-anchor="middle">12</text>
+  <rect x="224" y="158" width="29" height="60" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="238" y="192" text-anchor="middle">13</text>
+  <rect x="263" y="158" width="29" height="60" rx="3" fill="#6fa8c8" stroke="#3a6e8a" stroke-width="0.5"/><text x="277" y="192" text-anchor="middle">14</text>
+  <line x1="220" y1="254" x2="220" y2="307" stroke="#cc3333" stroke-width="3" stroke-linecap="round"/>
+</svg>`
+  };
+
+  let activeRole  = "all";
+  let activePhase = "all";
+
+  const load = () => {
+    const checked = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    return DUTIES.map(d => ({ ...d, done: !!checked[d.text] }));
+  };
+
+  const save = items => {
+    const checked = {};
+    items.forEach(it => { if (it.done) checked[it.text] = true; });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(checked));
+  };
+
+  const esc = s => s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+  function setRole(r) {
+    activeRole = r;
+    document.querySelectorAll(".f-btn[id^='role-']").forEach(b => b.classList.remove("active"));
+    document.getElementById("role-" + r).classList.add("active");
+    render();
+  }
+
+  function setPhase(p) {
+    activePhase = p;
+    document.querySelectorAll(".f-btn[id^='phase-']").forEach(b => b.classList.remove("active"));
+    document.getElementById("phase-" + p).classList.add("active");
+    render();
+  }
+
+  function phaseMatch(item) {
+    if (activePhase === "all") return true;
+    if (item.phase === activePhase) return true;
+    if (item.phase === "before-during-after") return true;
+    return false;
+  }
+
+  function render() {
+    const all     = load();
+    const visible = all.filter(d =>
+      (activeRole === "all" || d.role === activeRole || d.role === "both") && phaseMatch(d)
+    );
+
+    // Group by phase preserving order
+    const groups = [];
+    let lastPhase = null;
+    visible.forEach((item, idx) => {
+      const globalIdx = all.findIndex(d => d.text === item.text);
+      if (item.phase !== lastPhase) { groups.push({ phase: item.phase, items: [] }); lastPhase = item.phase; }
+      groups[groups.length - 1].items.push({ ...item, globalIdx });
+    });
+
+    const container = document.getElementById("list");
+
+    if (visible.length === 0) {
+      container.innerHTML = '<div class="section"><p class="empty">No tasks for this filter.</p></div>';
+    } else {
+      container.innerHTML = groups.map(g => {
+        const meta  = SECTION_META[g.phase] || { label: g.phase, icon: "📋", cls: g.phase };
+        const count = g.items.length;
+        const tasks = g.items.map(item => `
+          <div class="task${item.done ? " done" : ""}">
+            <input type="checkbox" ${item.done ? "checked" : ""} onchange="toggle(${item.globalIdx})"/>
+            <div class="task-body">
+              <div class="task-title">${esc(item.text)}</div>
+              ${item.note ? `<div class="task-note">${esc(item.note)}</div>` : ""}
+              ${item.diagram ? `<div class="task-extras"><button class="diagram-btn" onclick="openDiagram('${item.diagram}')">View layout</button></div>` : ""}
+            </div>
+          </div>`).join("");
+        return `
+          <div class="section">
+            <div class="section-head ${meta.cls}">
+              <span class="section-name">${meta.label}</span>
+              <span class="section-count">${count} task${count !== 1 ? "s" : ""}</span>
+            </div>
+            ${tasks}
+          </div>`;
+      }).join("");
+    }
+
+    const done  = visible.filter(i => i.done).length;
+    const total = visible.length;
+    const pct   = total === 0 ? 0 : Math.round((done / total) * 100);
+    document.getElementById("progressFill").style.width = pct + "%";
+    document.getElementById("progressLabel").textContent = `${done} / ${total} done`;
+  }
+
+  function toggle(index) {
+    const items = load();
+    items[index].done = !items[index].done;
+    save(items);
+    render();
+  }
+
+  function clearDone() { save(load().map(i => ({ ...i, done: false }))); render(); }
+  function clearAll()  { if (confirm("Reset all items?")) { save([]); render(); } }
+
+  function openDiagram(key) {
+    document.getElementById("modalContent").innerHTML = DIAGRAMS[key] || "";
+    document.getElementById("modalOverlay").classList.add("open");
+  }
+
+  function closeModal() {
+    document.getElementById("modalOverlay").classList.remove("open");
+  }
+
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+  render();
+</script>
+</body>
+</html>
