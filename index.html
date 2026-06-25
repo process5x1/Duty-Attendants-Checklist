@@ -168,8 +168,7 @@
     { text: "Main Door — Open the main door and use fob to turn off the alarm.",                                                             role: "both",       phase: "before" },
     { text: "Lights & Emergency Door — Turn on all lights and check the emergency door is not blocked.",                                     role: "both",       phase: "before" },
     { text: "Car Park — Make sure the car park is being used properly.",                                                                     role: "both",       phase: "before", diagram: "carpark" },
-    { text: "Assess Intentions — Kindly determine the intentions of unknown persons or those with past concerns.",                           role: "entrance",   phase: "before" },
-    { text: "Deny Entry if Needed — Do not allow entry to aggressive or intoxicated individuals.",                                           role: "entrance",   phase: "before" },
+    { text: "Entry Management — Assess intentions of unknown persons; deny access to anyone aggressive or intoxicated.",                     role: "entrance",   phase: "before" },
     { text: "Coordinate with Auditorium Attendant — Establish a communication plan before the meeting.",                                     role: "entrance",   phase: "before" },
     { text: "Prepare Equipment — Ensure a torch is available for car park inspections.",                                                     role: "entrance",   phase: "before" },
     { text: "Warm Welcome — Greet attendees warmly and help newcomers find seating.",                                                        role: "auditorium", phase: "before" },
@@ -177,10 +176,10 @@
     { text: "Check Auditorium Conditions — Inspect stage, heating, and ventilation.",                                                        role: "auditorium", phase: "before" },
 
     // ── Before, During & After ───────────────────────────────────────────────
-    { text: "Entrance Monitor — Stay at the entrance and watch those approaching.",                                                          role: "entrance",   phase: "before-during-after" },
+    { text: "Entrance Monitor — Stay alert at all times; watch for late arrivals, approaching individuals, and potential concerns.",         role: "entrance",   phase: "before-during-after" },
     { text: "Unattended Entrance — Lock the door or get another EA to cover; never leave it empty.",
              note: "Never use a door stopper as a substitute — the door must be locked or actively monitored.",                             role: "entrance",   phase: "before-during-after" },
-    { text: "Maintain Communication — Keep each other informed of any concerns.",                                                            role: "both",       phase: "before-during-after" },
+    { text: "Maintain Communication — Keep each other informed of concerns throughout the meeting.",                                         role: "both",       phase: "before-during-after" },
     { text: "Observe Behaviour — Watch for signs of distress, intoxication, or aggression.",                                                role: "both",       phase: "before-during-after" },
     { text: "Follow Security Protocols — Apply Handling Disruptions and Serious Security Concerns procedures.",                             role: "both",       phase: "before-during-after" },
     { text: "Stay Visible and Approachable — Maintain a calm, reassuring presence.",                                                        role: "both",       phase: "before-during-after" },
@@ -188,25 +187,21 @@
     // ── During ──────────────────────────────────────────────────────────────
     { text: "Inner Door — Close the inner door 5 minutes after the meeting starts.",
              note: "Outer doors must remain unlocked at all times for emergency access.",                                                   role: "entrance",   phase: "during" },
-    { text: "Monitor Entrance Continuously — Stay alert to late arrivals or potential concerns.",                                            role: "entrance",   phase: "during" },
     { text: "Car Park Inspection — 30 minutes after start, inspect car park with second attendant; verify exterior doors are locked.",       role: "entrance",   phase: "during" },
     { text: "Camera Monitoring — Watch security cameras and report any concerns.",                                                           role: "entrance",   phase: "during" },
     { text: "Assist in Foyer/Cloakroom — Provide support as needed.",                                                                       role: "entrance",   phase: "during" },
     { text: "Check for Winter Hazards — Ensure side path and car park are free of ice; report hazards.",                                    role: "entrance",   phase: "during" },
     { text: "Monitor Auditorium — Watch for disruptions or concerns.",                                                                      role: "auditorium", phase: "during" },
-    { text: "Coordinate with Entrance Attendant — Maintain ongoing communication.",                                                         role: "auditorium", phase: "during" },
     { text: "Handle Disruptions — Follow outlined procedures for managing disruptions.",                                                     role: "auditorium", phase: "during" },
     { text: "Emergency Readiness — Stay prepared to direct evacuation or contact emergency services.",                                       role: "auditorium", phase: "during" },
 
     // ── After ───────────────────────────────────────────────────────────────
     { text: "Second Car Park Inspection — Carry out 15 minutes before the end of the meeting.",                                             role: "entrance",   phase: "after" },
     { text: "Unlock Inner Doors — Unlock after the concluding prayer.",                                                                     role: "entrance",   phase: "after" },
-    { text: "Check Fire Exit Doors — Ensure platform-end fire exits are secure.",                                                           role: "entrance",   phase: "after" },
-    { text: "Lock Main Doors — Lock once all attendees have left.",                                                                         role: "entrance",   phase: "after" },
-    { text: "Final Sweep — Confirm the building and grounds are secure.",                                                                   role: "entrance",   phase: "after" },
+    { text: "Secure All Doors — Check fire exits are secure and lock main doors once all attendees have left.",                             role: "entrance",   phase: "after" },
     { text: "Support Exit Flow — Ensure a safe and orderly departure.",                                                                     role: "auditorium", phase: "after" },
-    { text: "Confirm Building Empty — Assist entrance attendant in confirming all have left.",                                               role: "auditorium", phase: "after" },
     { text: "Final Checks — Inspect stage, auditorium, and ventilation.",                                                                   role: "auditorium", phase: "after" },
+    { text: "Final Sweep — Jointly confirm all attendees have left and the building and grounds are secure.",                               role: "both",       phase: "after" },
 
     // ── Emergency ────────────────────────────────────────────────────────────
     { text: "Provide Direction — Guide attendees during fire alarms, evacuations, or bomb threats.",                                        role: "both",       phase: "emergency" },
