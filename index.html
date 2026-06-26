@@ -42,12 +42,10 @@
     .section-head {
       padding: 14px 20px; display: flex; align-items: center; gap: 12px;
     }
-    .section-head.before          { background: #eff6ff; border-bottom: 1px solid #bfdbfe; }
-    .section-head.before-during-after { background: #f5f3ff; border-bottom: 1px solid #ddd6fe; }
-    .section-head.during          { background: #f0fdf4; border-bottom: 1px solid #bbf7d0; }
+    .section-head.before     { background: #eff6ff; border-bottom: 1px solid #bfdbfe; }
+    .section-head.during     { background: #f0fdf4; border-bottom: 1px solid #bbf7d0; }
     .section-head.after           { background: #fff7ed; border-bottom: 1px solid #fed7aa; }
     .section-head.emergency       { background: #fff1f2; border-bottom: 1px solid #fecdd3; }
-    .section-icon { font-size: 1.1rem; }
     .section-name { font-size: 0.85rem; font-weight: 700; color: #1c1917; flex: 1; }
     .section-count { font-size: 0.72rem; color: #a8a29e; }
 
@@ -63,16 +61,13 @@
     .task input[type="checkbox"] { width: 18px; height: 18px; accent-color: #1c1917; margin-top: 1px; flex-shrink: 0; cursor: pointer; }
     .task-body { flex: 1; }
     .task-title { font-size: 0.9rem; color: #292524; line-height: 1.5; }
-    .task-note {
-      font-size: 0.75rem; color: #92400e; background: #fef3c7;
-      padding: 5px 10px; border-radius: 5px; margin-top: 6px; border-left: 3px solid #f59e0b;
-    }
     .task-extras { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
     .role-pill {
       font-size: 0.65rem; font-weight: 600; padding: 2px 8px; border-radius: 99px;
       background: #f5f5f4; color: #a8a29e;
     }
-    .role-pill.entrance { background: #dbeafe; color: #1e40af; }
+    .role-pill.entrance  { background: #dbeafe; color: #1e40af; }
+    .role-pill.auditorium { background: #dcfce7; color: #166534; }
     .hl { background: #fef08a; color: #713f12; border-radius: 3px; padding: 0 3px; font-weight: 600; }
 
     .diagram-btn {
@@ -165,21 +160,18 @@
   const DUTIES = [
     // ── Before ──────────────────────────────────────────────────────────────
     { text: "Duty Start Time — Start 20–30 minutes prior to duty.",                                                                          role: "both",       phase: "before" },
-    { text: "Access & Entry — Open the [car park gate], unlock the [walk-in gate] padlock only, open the main door and use fob to deactivate the alarm. Car Park — Make sure the car park is being used properly.",  role: "both", phase: "before", diagram: "carpark" },
+    { text: "Access & Entry — Open the [car park gate], unlock the [walk-in gate] padlock only, open the main door and use fob to deactivate the alarm. Check the car park is being used properly.",  role: "both", phase: "before", diagram: "carpark" },
     { text: "Welcome & Entry Management — Greet attendees warmly, help newcomers to seating, and position trained brothers near persons of concern. ⚠️ Deny access to anyone aggressive or intoxicated.",
                                                                                                                                              role: "both",       phase: "before" },
     { text: "Coordinate & Equip — Establish a communication plan with the auditorium attendant and ensure a torch is available for car park inspections.", role: "entrance",   phase: "before" },
     { text: "Lights & Venue Check — Turn on all lights, verify the emergency door is clear, and inspect stage, heating, and ventilation.",   role: "both",       phase: "before" },
 
     // ── During ──────────────────────────────────────────────────────────────
-    { text: "Entrance Duty — Stay alert for late arrivals and concerns; if you must leave, lock the door or have another EA cover.",
-             note: "Never use a door stopper as a substitute — the door must be locked or actively monitored.",                             role: "entrance",   phase: "during" },
+    { text: "Entrance Duty — Stay alert for late arrivals and concerns; if you must leave, lock the door or have another EA cover. ⚠️ Never use a door stopper as a substitute — the door must be locked or actively monitored.", role: "entrance", phase: "during" },
     { text: "Awareness & Presence — Stay visible and approachable, observe for signs of distress or aggression, and keep each other informed.", role: "both",   phase: "during" },
-    { text: "Timed Checks — Close inner door 5 minutes after start; at 30 minutes, inspect car park with second attendant and verify exterior doors are locked.",
-             note: "Outer doors must remain unlocked at all times for emergency access.",                                                   role: "entrance",   phase: "during" },
+    { text: "Timed Checks — Close inner door 5 minutes after start; at 30 minutes, inspect car park with second attendant and verify exterior doors are locked. ⚠️ Outer doors must remain unlocked at all times for emergency access.", role: "entrance", phase: "during" },
     { text: "Foyer & Monitoring — Watch security cameras, assist in foyer/cloakroom, and check for winter hazards on the side path and car park.", role: "entrance", phase: "during" },
-    { text: "Auditorium Watch — Monitor for disruptions and handle them per outlined procedures.",                                          role: "auditorium", phase: "during" },
-    { text: "Security & Emergency Readiness — Apply Handling Disruptions and Serious Security Concerns procedures; stay prepared to direct evacuation or contact emergency services.", role: "both", phase: "during" },
+    { text: "Auditorium & Security Watch — Monitor for disruptions, handle them per outlined procedures, and stay prepared to direct evacuation or contact emergency services.", role: "both", phase: "during" },
 
     // ── After ───────────────────────────────────────────────────────────────
     { text: "Pre-Close Check — 15 minutes before end, carry out second car park inspection; unlock inner doors [after the concluding prayer].", role: "entrance",   phase: "after" },
@@ -187,11 +179,8 @@
     { text: "Final Inspection — Inspect stage, auditorium, and ventilation; jointly confirm all have left and the building and grounds are secure.", role: "both",  phase: "after" },
 
     // ── Emergency ────────────────────────────────────────────────────────────
-    { text: "Provide Direction — Guide attendees during fire alarms, evacuations, or bomb threats.",                                        role: "both",       phase: "emergency" },
-    { text: "Contact Emergency Services — Ensure authorities are notified when needed.",                                                    role: "both",       phase: "emergency" },
-    { text: "Assist Evacuation — Entrance attendant supports auditorium attendant.",                                                        role: "both",       phase: "emergency" },
-    { text: "Monitor Exits — Ensure all escape routes remain clear and unlocked.",                                                          role: "both",       phase: "emergency" },
-    { text: "Follow Congregation Procedures — Apply local emergency guidelines.",                                                           role: "both",       phase: "emergency" },
+    { text: "Evacuation Response — Guide attendees to exits, keep all escape routes clear and unlocked, and support the auditorium attendant with evacuation.", role: "both", phase: "emergency" },
+    { text: "Contacts & Procedures — Notify emergency services and follow local congregation emergency guidelines.",                        role: "both",       phase: "emergency" },
   ];
 
   const SECTION_META = {
@@ -310,8 +299,10 @@
             <input type="checkbox" ${item.done ? "checked" : ""} onchange="toggle(${item.globalIdx})"/>
             <div class="task-body">
               <div class="task-title">${esc(item.text).replace(/^([^—]+—)/, '<strong>$1</strong>').replace(/\[([^\]]+)\]/g, '<span class="hl">$1</span>')}</div>
-              ${item.note ? `<div class="task-note">${esc(item.note)}</div>` : ""}
-              ${item.diagram ? `<div class="task-extras"><button class="diagram-btn" onclick="openDiagram('${item.diagram}')">View layout</button></div>` : ""}
+              <div class="task-extras">
+                <span class="role-pill${item.role === 'entrance' ? ' entrance' : item.role === 'auditorium' ? ' auditorium' : ''}">${item.role === 'both' ? 'Both' : item.role === 'entrance' ? 'EA' : 'AA'}</span>
+                ${item.diagram ? `<button class="diagram-btn" onclick="openDiagram('${item.diagram}')">View layout</button>` : ""}
+              </div>
             </div>
           </div>`).join("");
         return `
